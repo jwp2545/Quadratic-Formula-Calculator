@@ -1,5 +1,6 @@
 import math
 import cmath
+import utilities
 
 
 def inputs():
@@ -7,10 +8,11 @@ def inputs():
     takes valid user inputs and sets them to variables
     :return a, b, c: the user inputs
     """
-    print("\u2726 Quadratic Formula Calculator \u2726\n")
     while True:
+        # User inputs values for a, b, and c
         try:
             a = float(input("Enter a number for a: "))
+            # Inf is an invalid input
             if math.isinf(a):
                 print("Invalid input")
                 quit()
@@ -23,21 +25,12 @@ def inputs():
                 print("Invalid input")
                 quit()
         except ValueError:
+            # Values that are not floats are invalid inputs
             print("Invalid input")
             quit()
         else:
             break
     return a, b, c
-
-
-def check_a(a):
-    """
-    checks to see if 'a' is equal to zero as this is not allowed
-    :param a: first user input
-    """
-    if a == 0:
-        print("Zero Divisor Error - \u2018a\u2019 must not equal 0")
-        quit()
 
 
 def discriminant(a, b, c):
@@ -48,38 +41,22 @@ def discriminant(a, b, c):
     :param c: third user input
     :return d: the discriminant
     """
-    check_a(a)
+
+    # Checks if the value of 'a' is zero
+    utilities.check_a(a)
     try:
+        # Computes discriminant
         d = float(b ** 2 - 4 * a * c)
+        # Checks if discriminant is an integer in order to print correct form
         if d.is_integer():
             print("\nDiscriminant:", int(d))
         else:
             print("\nDiscriminant:", d)
         return d
     except OverflowError:
+        # Checks if overflow occurs
         print("OVERFLOW ERROR")
         quit()
-
-
-def is_int(a, b, c):
-    """
-    checks to see if the float input is equal to an integer
-    :param a: first user input
-    :param b: second user input
-    :param c: third user input
-    :return a, b, c: the inputs with possible changed types
-    """
-    if a.is_integer():
-        a = int(a)
-    if b.is_integer():
-        b = int(b)
-    if c.is_integer():
-        c = int(c)
-    if a == 1:
-        a = str(a).replace("1", "")
-    if b == 1:
-        b = str(b).replace("1", "")
-    return a, b, c
 
 
 def quadratic_roots(a, b, c, d):
@@ -90,7 +67,9 @@ def quadratic_roots(a, b, c, d):
     :param c: third user input
     :param d: the discriminant
     """
-    a_print, b_print, c_print = is_int(a, b, c)
+    # Separate variables for print
+    a_print, b_print, c_print = utilities.is_int(a, b, c)
+    # Prints equation correctly based on values of b and c
     if b < 0 or c < 0 or b == 0 or c == 0:
         if b < 0 and c < 0:
             print("Equation: ", a_print, "x\u00B2 - ", -b_print, "x - ", -c_print, " = 0", sep="")
@@ -111,8 +90,10 @@ def quadratic_roots(a, b, c, d):
     else:
         print("Equation: ", a_print, "x\u00B2 + ", b_print, "x + ", c_print, " = 0", sep="")
     if d > 0:
+        # Two roots will occur if discriminant is greater than zero
         root1 = (-b + math.sqrt(d)) / (2 * a)
         root2 = (-b - math.sqrt(d)) / (2 * a)
+        # Checks if roots are integers in order to display print statement correctly
         if root1.is_integer():
             root1 = int(root1)
         if root2.is_integer():
@@ -121,9 +102,11 @@ def quadratic_roots(a, b, c, d):
         print("x =", root1)
         print("x =", root2)
     elif d < 0:
+        # One imaginary root will occur if discriminant is less than zero
         print("No real root(s) found")
         root1 = (-b + cmath.sqrt(d)) / (2 * a)
         print("Imaginary root found")
+        # Formats print statement
         root_i = str(root1)
         root_i = root_i.replace("(", "")
         root_i = root_i.replace("j", "𝑖")
@@ -131,6 +114,7 @@ def quadratic_roots(a, b, c, d):
         root_i = root_i.replace("+", " \u00B1 ")
         print("x =", root_i)
     else:
+        # One root will occur if discriminant is equal to zero
         root1 = (-b + math.sqrt(d)) / (2 * a)
         print("One real root found")
         if root1.is_integer():
@@ -142,6 +126,7 @@ def main():
     """
     runs program
     """
+    print("\u2726 Quadratic Formula Calculator \u2726\n")
     a, b, c, = inputs()
     d = discriminant(a, b, c)
     quadratic_roots(a, b, c, d)
